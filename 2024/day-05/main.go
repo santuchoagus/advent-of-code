@@ -44,48 +44,7 @@ func (update update) isValid(rules map[int]update) bool {
 	return true
 }
 
-func main() {
-	rules, updates := parser()
-
-	// ruleMap function returns a map where each key is an "after" number
-	// (i.e. numbers that appear after "|") to a list of the numbers that come before it
-	ruleBeforeMap := ruleMap(rules, updates)
-	result := 0
-
-	for _, update := range updates {
-		// Skip invalid updates
-		if !update.isValid(ruleBeforeMap) {
-			continue
-		}
-
-		// Get the middle page number of the update for adding up the result.
-		middlePageNumber := update[len(update)/2]
-		result += middlePageNumber
-	}
-	fmt.Println("Part one result is:", result)
-
-	// # # Part 2
-	// # A.K.A. No me leí el Cormen todavía
-	// #
-
-	result = 0
-	// Same for loop as above but just invert the guard clause to get the invalid ones.
-	for _, upd := range updates {
-		// Skip valid updates
-		if upd.isValid(ruleBeforeMap) {
-			continue
-		}
-
-		orderedUpd := orderUpdate(upd, ruleBeforeMap)
-
-		// Get the middle page number of the update for adding up the result.
-		middlePageNumber := orderedUpd[len(orderedUpd)/2]
-		result += middlePageNumber
-	}
-	fmt.Println("Part two result is:", result)
-	return
-}
-
+// Loops indefinitely until it gets ordered
 func orderUpdate(upd update, rules map[int]update) (orderedUpd update) {
 	maxLoops := 100000000 // NASA APPROVED
 	if len(upd) < 2 {
@@ -132,5 +91,47 @@ func orderUpdate(upd update, rules map[int]update) (orderedUpd update) {
 		//[...passedBefore + beforeSlice...] + afterNum + [...remainderSlice...]
 		orderedUpd = slices.Concat(passedBefore, beforeSlice, update{afterNum}, remainderSlice)
 	}
+	return
+}
+
+func main() {
+	rules, updates := parser()
+
+	// ruleMap function returns a map where each key is an "after" number
+	// (i.e. numbers that appear after "|") to a list of the numbers that come before it
+	ruleBeforeMap := ruleMap(rules, updates)
+	result := 0
+
+	for _, update := range updates {
+		// Skip invalid updates
+		if !update.isValid(ruleBeforeMap) {
+			continue
+		}
+
+		// Get the middle page number of the update for adding up the result.
+		middlePageNumber := update[len(update)/2]
+		result += middlePageNumber
+	}
+	fmt.Println("Part one result is:", result)
+
+	// # # Part 2
+	// # A.K.A. No me leí el Cormen todavía
+	// #
+
+	result = 0
+	// Same for loop as above but just invert the guard clause to get the invalid ones.
+	for _, upd := range updates {
+		// Skip valid updates
+		if upd.isValid(ruleBeforeMap) {
+			continue
+		}
+
+		orderedUpd := orderUpdate(upd, ruleBeforeMap)
+
+		// Get the middle page number of the update for adding up the result.
+		middlePageNumber := orderedUpd[len(orderedUpd)/2]
+		result += middlePageNumber
+	}
+	fmt.Println("Part two result is:", result)
 	return
 }
