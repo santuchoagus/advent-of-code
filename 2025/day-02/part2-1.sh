@@ -1,0 +1,1 @@
+cat input-part1.txt | tr ",-" "\n" | grep -v '^$' | swipl -s part2-1.pl -g "process_file(Result), writeln(Result)" -t halt
